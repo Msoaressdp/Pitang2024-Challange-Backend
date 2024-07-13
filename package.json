@@ -20,7 +20,8 @@
   },
   "homepage": "https://github.com/Msoaressdp/Pitang2024-Challange-Backend#readme",
   "dependencies": {
-    "express": "^4.19.2"
+    "express": "^4.19.2",
+    "zod": "^3.23.8"
   },
   "devDependencies": {
     "nodemon": "^3.1.4"
