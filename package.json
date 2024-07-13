@@ -3,8 +3,10 @@
   "version": "1.0.0",
   "description": "Pitang Challange: COVID-19 vaccine scheduling",
   "main": "index.js",
-  "scripts": {
-    "test": "npm test"
+ "scripts": {
+    "test": "npm test",
+    "start": "node index.js",
+    "dev": "npm start --watch"
   },
   "repository": {
     "type": "git",
