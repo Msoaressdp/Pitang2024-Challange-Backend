@@ -31,14 +31,17 @@ export default class AppointmentController {
         return response.status(400).send(error);
       }
       
-      const scheduledDate = data.scheduledDate;
+      const scheduledDate = new Date(data.scheduledDate.toISOString());
+      if (scheduledDate.getMinutes() !== 0 || scheduledDate.getSeconds() !== 0) {
+        return response.status(400).send({ message: 'O horário do agendamento precisa ser exato (ex: 13:00, 14:00).' });
+      }
 
       const appointmentsOnDay = appointments.filter(
         (appointment) => appointment.scheduledDate.toDateString() === scheduledDate.toDateString()
       );
 
       if (appointmentsOnDay.length >= APPOINTMENTS_DAILY_LIMIT) {
-        return response.status(400).send({ message: 'No available slots on this day.' });
+        return response.status(400).send({ message: 'Esse dia está esgotado.' });
       }
 
       const appointmentsAtHour = appointments.filter(
@@ -46,7 +49,7 @@ export default class AppointmentController {
       );
 
       if (appointmentsAtHour.length >= APPOINTMENTS_HOURLY_LIMIT) {
-        return response.status(400).send({ message: 'No available slots at this hour.' });
+        return response.status(400).send({ message: 'Esse horário está esgotado.' });
       }
 
       appointments.push(data);
