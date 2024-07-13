@@ -6,6 +6,9 @@ const appointmentSchema = z.object({
   scheduledDate: z.date(),
 });
 
+const APPOINTMENTS_HOURLY_LIMIT = 2;
+const APPOINTMENTS_DAILY_LIMIT = 20;
+
 let appointments = [];
 
 export default class AppointmentController {
@@ -16,25 +19,43 @@ export default class AppointmentController {
     store(request, response) {
       const appointment = request.body;
   
-      const { sucess, data, error } = appointmentSchema.safeParse({
+      const { success, data, error } = appointmentSchema.safeParse({
   
         name: appointment.name,
-        birthDate: appointment.birthDate,
-        scheduledDate: appointment.scheduledDate,
+        birthDate: new Date(appointment.birthDate),
+        scheduledDate: new Date(appointment.scheduledDate),
   
       });
   
-      if (!sucess){
+      if (!success){
         return response.status(400).send(error);
       }
-  
+      
+      const scheduledDate = data.scheduledDate;
+
+      const appointmentsOnDay = appointments.filter(
+        (appointment) => appointment.scheduledDate.toDateString() === scheduledDate.toDateString()
+      );
+
+      if (appointmentsOnDay.length >= APPOINTMENTS_DAILY_LIMIT) {
+        return response.status(400).send({ message: 'No available slots on this day.' });
+      }
+
+      const appointmentsAtHour = appointments.filter(
+        (appointment) => appointment.scheduledDate.getTime() === scheduledDate.getTime()
+      );
+
+      if (appointmentsAtHour.length >= APPOINTMENTS_HOURLY_LIMIT) {
+        return response.status(400).send({ message: 'No available slots at this hour.' });
+      }
+
       appointments.push(data);
   
       response.send({ message: 'store', data });
   
   
     }
-    
+
     update(request, response) {}
   
   }
