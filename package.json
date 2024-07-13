@@ -1,0 +1,19 @@
+{
+  "name": "pitang-backend",
+  "version": "1.0.0",
+  "description": "Pitang Challange: COVID-19 vaccine scheduling",
+  "main": "index.js",
+  "scripts": {
+    "test": "npm test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Msoaressdp/Pitang2024-Challange-Backend.git"
+  },
+  "author": "Matheus Soares",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Msoaressdp/Pitang2024-Challange-Backend/issues"
+  },
+  "homepage": "https://github.com/Msoaressdp/Pitang2024-Challange-Backend#readme"
+}
