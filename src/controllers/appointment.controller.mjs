@@ -1,9 +1,11 @@
 import z from 'zod';
+import crypto from 'node:crypto';
 
 const appointmentSchema = z.object({
   name: z.string(),
   birthDate: z.date(),
   scheduledDate: z.date(),
+  id: z.string().optional(),
 });
 
 const APPOINTMENTS_HOURLY_LIMIT = 2;
@@ -13,14 +15,12 @@ let appointments = [];
 
 export default class AppointmentController {
 
-    destroy(request, response) {
       destroy(request, response) {
-        const { name } = request.params;
+        const { id } = request.params;
     
-        appointments =  appointments.filter((appointment) =>  appointment.name !== name);
+        appointments =  appointments.filter((appointment) =>  appointment.id !== id);
     
         response.status(204).send();
-      }
     }
 
     getAll(request,response) {
@@ -46,6 +46,10 @@ export default class AppointmentController {
       if (!success){
         return response.status(400).send(error);
       }
+
+      const [id] = crypto.randomUUID().split('-');
+
+      data.id = id;
       
       const scheduledDate = new Date(data.scheduledDate.toISOString());
       if (scheduledDate.getMinutes() !== 0 || scheduledDate.getSeconds() !== 0) {
