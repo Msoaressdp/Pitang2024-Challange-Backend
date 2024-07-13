@@ -6,6 +6,8 @@ const appointmentSchema = z.object({
   birthDate: z.date(),
   scheduledDate: z.date(),
   id: z.string().optional(),
+  situation: z.string().default("Undone"),
+  conclusion: z.string().optional(),
 });
 
 const APPOINTMENTS_HOURLY_LIMIT = 2;
@@ -38,6 +40,7 @@ export default class AppointmentController {
       const { success, data, error } = appointmentSchema.safeParse({
   
         name: appointment.name,
+        situation: appointment.situation,
         birthDate: new Date(appointment.birthDate),
         scheduledDate: new Date(appointment.scheduledDate),
   
@@ -50,6 +53,7 @@ export default class AppointmentController {
       const [id] = crypto.randomUUID().split('-');
 
       data.id = id;
+      data.conclusion = appointment.conclusion;
       
       const scheduledDate = new Date(data.scheduledDate.toISOString());
       if (scheduledDate.getMinutes() !== 0 || scheduledDate.getSeconds() !== 0) {
