@@ -2,7 +2,8 @@
   "name": "pitang-backend",
   "version": "1.0.0",
   "description": "Pitang Challange: COVID-19 vaccine scheduling",
-  "main": "index.js",
+  "main": "src/index.mjs",
+  "type": "module",
   "scripts": {
     "test": "npm test",
     "start": "node --env-file=.env src/index.mjs",
