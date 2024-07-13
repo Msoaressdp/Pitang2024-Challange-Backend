@@ -15,5 +15,8 @@
   "bugs": {
     "url": "https://github.com/Msoaressdp/Pitang2024-Challange-Backend/issues"
   },
-  "homepage": "https://github.com/Msoaressdp/Pitang2024-Challange-Backend#readme"
+  "homepage": "https://github.com/Msoaressdp/Pitang2024-Challange-Backend#readme",
+  "dependencies": {
+    "express": "^4.19.2"
+  }
 }
