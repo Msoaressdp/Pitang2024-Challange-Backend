@@ -20,6 +20,7 @@
   },
   "homepage": "https://github.com/Msoaressdp/Pitang2024-Challange-Backend#readme",
   "dependencies": {
+    "cors": "^2.8.5",
     "express": "^4.19.2",
     "zod": "^3.23.8"
   },
