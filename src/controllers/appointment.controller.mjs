@@ -13,7 +13,16 @@ let appointments = [];
 
 export default class AppointmentController {
 
-    destroy(request, response) {}
+    destroy(request, response) {
+      destroy(request, response) {
+        const { name } = request.params;
+    
+        appointments =  appointments.filter((appointment) =>  appointment.name !== name);
+    
+        response.status(204).send();
+      }
+    }
+
     getAll(request,response) {
       response.send({
         page: 1, 
@@ -22,6 +31,7 @@ export default class AppointmentController {
         items: appointments,
       });
     }
+
     store(request, response) {
       const appointment = request.body;
   
