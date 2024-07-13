@@ -14,8 +14,14 @@ let appointments = [];
 export default class AppointmentController {
 
     destroy(request, response) {}
-    getOne(request, response) {}
-    index(request,response) {}
+    getAll(request,response) {
+      response.send({
+        page: 1, 
+        pageSize: 20 ,
+        totalCount: appointments.length, 
+        items: appointments,
+      });
+    }
     store(request, response) {
       const appointment = request.body;
   
