@@ -17,12 +17,33 @@ let appointments = [];
 
 export default class AppointmentController {
 
-      destroy(request, response) {
-        const { id } = request.params;
-    
-        appointments =  appointments.filter((appointment) =>  appointment.id !== id);
-    
-        response.status(204).send();
+  update(request, response) {
+    const { id } = request.params;
+    const { situation, conclusion } = request.body;
+
+    const newAppointments = appointments.map((appointment) => {
+      if (appointment.id === id) {
+        return {
+          ...appointment,
+          situation,
+          conclusion,
+        };
+      }
+
+      return appointment;
+    });
+
+    appointments = newAppointments;
+
+    response.send({ message: 'Appointment Updated' });
+  }
+
+    destroy(request, response) {
+      const { id } = request.params;
+  
+      appointments =  appointments.filter((appointment) =>  appointment.id !== id);
+  
+      response.status(204).send();
     }
 
     getAll(request,response) {
@@ -83,6 +104,4 @@ export default class AppointmentController {
   
     }
 
-    update(request, response) {}
-  
-  }
+}
