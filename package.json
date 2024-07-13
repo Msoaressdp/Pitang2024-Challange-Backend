@@ -3,10 +3,10 @@
   "version": "1.0.0",
   "description": "Pitang Challange: COVID-19 vaccine scheduling",
   "main": "index.js",
- "scripts": {
+  "scripts": {
     "test": "npm test",
-    "start": "node index.js",
-    "dev": "npm start --watch"
+    "start": "node --env-file=.env src/index.mjs",
+    "dev": "nodemon --env-file=.env src/index.mjs"
   },
   "repository": {
     "type": "git",
@@ -20,5 +20,8 @@
   "homepage": "https://github.com/Msoaressdp/Pitang2024-Challange-Backend#readme",
   "dependencies": {
     "express": "^4.19.2"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.4"
   }
 }
