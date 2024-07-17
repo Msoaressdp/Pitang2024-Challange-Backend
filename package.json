@@ -5,9 +5,10 @@
   "main": "src/index.ts",
   "type": "module",
   "scripts": {
-    "test": "npm test",
-    "start": "node --env-file=.env src/index.mjs",
-    "dev": "nodemon --env-file=.env src/index.ts"
+  "test": "npm test",
+  "start": "tsx --env-file=.env src/index.ts",
+  "dev": "tsx watch --env-file=.env src/index.ts"
+
   },
   "repository": {
     "type": "git",
@@ -29,6 +30,7 @@
     "@types/cors": "^2.8.17",
     "@types/express": "^4.17.21",
     "nodemon": "^3.1.4",
+    "tsx": "^4.16.2",
     "typescript": "^5.5.3"
   }
 }
