@@ -1,27 +1,10 @@
-import z from 'zod';
 import crypto from 'node:crypto';
 import { Request, Response } from 'express';
-
-const appointmentSchema = z.object({
-  name: z.string(),
-  birthDate: z.date(),
-  scheduledDate: z.date(),
-  id: z.string().optional(),
-  situation: z.string().default("Undone"),
-  conclusion: z.string().optional(),
-});
+import { appointmentSchema } from '../schema/appointmentSchema';
+import { Appointment } from '../interfaces/index';
 
 const APPOINTMENTS_HOURLY_LIMIT = 2;
 const APPOINTMENTS_DAILY_LIMIT = 20;
-
-interface Appointment {
-  name: string;
-  birthDate: Date;
-  scheduledDate: Date;
-  id?: string;
-  situation?: string;
-  conclusion?: string;
-}
 
 let appointments: Appointment[] = [];
 
