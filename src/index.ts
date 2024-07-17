@@ -1,7 +1,7 @@
 import express from 'express';
 import cors from 'cors'
 import helmet from 'helmet'
-import appointmentRoutes from './routes/appointment.router.ts';
+import appointmentRoutes from './routes/appointment.router';
 
 const PORT = process.env.PORT || 3000;
 
