@@ -1,18 +1,10 @@
 import crypto from 'node:crypto';
 import { Request, Response } from 'express';
 import { appointmentSchema } from '../schema/appointmentSchema';
+import { Appointment } from '../interfaces/index';
 
 const APPOINTMENTS_HOURLY_LIMIT = 2;
 const APPOINTMENTS_DAILY_LIMIT = 20;
-
-interface Appointment {
-  name: string;
-  birthDate: Date;
-  scheduledDate: Date;
-  id?: string;
-  situation?: string;
-  conclusion?: string;
-}
 
 let appointments: Appointment[] = [];
 
