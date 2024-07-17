@@ -1,13 +1,13 @@
 {
   "name": "pitang-backend",
   "version": "1.0.0",
-  "description": "Pitang Challange: COVID-19 vaccine scheduling",
-  "main": "src/index.mjs",
+  "description": "Pitang Challenge: COVID-19 vaccine scheduling",
+  "main": "src/index.ts",
   "type": "module",
   "scripts": {
     "test": "npm test",
     "start": "node --env-file=.env src/index.mjs",
-    "dev": "nodemon --env-file=.env src/index.mjs"
+    "dev": "nodemon --env-file=.env src/index.ts"
   },
   "repository": {
     "type": "git",
@@ -26,6 +26,9 @@
     "zod": "^3.23.8"
   },
   "devDependencies": {
-    "nodemon": "^3.1.4"
+    "@types/cors": "^2.8.17",
+    "@types/express": "^4.17.21",
+    "nodemon": "^3.1.4",
+    "typescript": "^5.5.3"
   }
 }
