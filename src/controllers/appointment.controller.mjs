@@ -38,70 +38,74 @@ export default class AppointmentController {
     response.send({ message: 'Appointment Updated' });
   }
 
-    destroy(request, response) {
-      const { id } = request.params;
-  
-      appointments =  appointments.filter((appointment) =>  appointment.id !== id);
-  
-      response.status(204).send();
+  destroy(request, response) {
+    const { id } = request.params;
+
+    appointments = appointments.filter((appointment) => appointment.id !== id);
+
+    response.status(204).send();
+  }
+
+  getAll(request, response) {
+    response.send({
+      page: 1,
+      pageSize: 20,
+      totalCount: appointments.length,
+      items: appointments,
+    });
+  }
+
+  store(request, response) {
+    const appointment = request.body;
+
+    const { success, data, error } = appointmentSchema.safeParse({
+      name: appointment.name,
+      situation: appointment.situation,
+      birthDate: new Date(appointment.birthDate),
+      scheduledDate: new Date(appointment.scheduledDate),
+    });
+
+    if (!success) {
+      return response.status(400).send(error);
     }
 
-    getAll(request,response) {
-      response.send({
-        page: 1, 
-        pageSize: 20 ,
-        totalCount: appointments.length, 
-        items: appointments,
-      });
+    const [id] = crypto.randomUUID().split('-');
+    data.id = id;
+    data.conclusion = appointment.conclusion;
+
+    const scheduledDate = new Date(data.scheduledDate);
+    scheduledDate.setSeconds(0, 0);
+
+    if (scheduledDate.getMinutes() !== 0) {
+      return response.status(400).send({ message: 'O horário do agendamento precisa ser exato (ex: 13:00, 14:00).' });
     }
 
-    store(request, response) {
-      const appointment = request.body;
-  
-      const { success, data, error } = appointmentSchema.safeParse({
-  
-        name: appointment.name,
-        situation: appointment.situation,
-        birthDate: new Date(appointment.birthDate),
-        scheduledDate: new Date(appointment.scheduledDate),
-  
-      });
-  
-      if (!success){
-        return response.status(400).send(error);
+    const appointmentsOnDay = appointments.filter(
+      (appointment) => {
+        const appointmentDate = new Date(appointment.scheduledDate);
+        appointmentDate.setSeconds(0, 0);
+        return appointmentDate.toDateString() === scheduledDate.toDateString();
       }
+    );
 
-      const [id] = crypto.randomUUID().split('-');
-
-      data.id = id;
-      data.conclusion = appointment.conclusion;
-      
-      const scheduledDate = new Date(data.scheduledDate.toISOString());
-      if (scheduledDate.getMinutes() !== 0 || scheduledDate.getSeconds() !== 0) {
-        return response.status(400).send({ message: 'O horário do agendamento precisa ser exato (ex: 13:00, 14:00).' });
-      }
-
-      const appointmentsOnDay = appointments.filter(
-        (appointment) => appointment.scheduledDate.toDateString() === scheduledDate.toDateString()
-      );
-
-      if (appointmentsOnDay.length >= APPOINTMENTS_DAILY_LIMIT) {
-        return response.status(400).send({ message: 'Esse dia está esgotado.' });
-      }
-
-      const appointmentsAtHour = appointments.filter(
-        (appointment) => appointment.scheduledDate.getTime() === scheduledDate.getTime()
-      );
-
-      if (appointmentsAtHour.length >= APPOINTMENTS_HOURLY_LIMIT) {
-        return response.status(400).send({ message: 'Esse horário está esgotado.' });
-      }
-
-      appointments.push(data);
-  
-      response.send({ message: 'store', data });
-  
-  
+    if (appointmentsOnDay.length >= APPOINTMENTS_DAILY_LIMIT) {
+      return response.status(400).send({ message: 'Esse dia está esgotado.' });
     }
 
+    const appointmentsAtHour = appointments.filter(
+      (appointment) => {
+        const appointmentDate = new Date(appointment.scheduledDate);
+        appointmentDate.setSeconds(0, 0);
+        return appointmentDate.getTime() === scheduledDate.getTime();
+      }
+    );
+
+    if (appointmentsAtHour.length >= APPOINTMENTS_HOURLY_LIMIT) {
+      return response.status(400).send({ message: 'Esse horário está esgotado.' });
+    }
+
+    appointments.push(data);
+
+    response.send({ message: 'store', data });
+  }
 }
