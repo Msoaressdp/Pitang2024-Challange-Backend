@@ -1,5 +1,6 @@
 import z from 'zod';
 import crypto from 'node:crypto';
+import { Request, Response } from 'express';
 
 const appointmentSchema = z.object({
   name: z.string(),
@@ -13,11 +14,20 @@ const appointmentSchema = z.object({
 const APPOINTMENTS_HOURLY_LIMIT = 2;
 const APPOINTMENTS_DAILY_LIMIT = 20;
 
-let appointments = [];
+interface Appointment {
+  name: string;
+  birthDate: Date;
+  scheduledDate: Date;
+  id?: string;
+  situation?: string;
+  conclusion?: string;
+}
+
+let appointments: Appointment[] = [];
 
 export default class AppointmentController {
 
-  update(request, response) {
+  update(request: Request, response: Response): void {
     const { id } = request.params;
     const { situation, conclusion } = request.body;
 
@@ -38,7 +48,7 @@ export default class AppointmentController {
     response.send({ message: 'Appointment Updated' });
   }
 
-  destroy(request, response) {
+  destroy(request: Request, response: Response): void {
     const { id } = request.params;
 
     appointments = appointments.filter((appointment) => appointment.id !== id);
@@ -46,7 +56,7 @@ export default class AppointmentController {
     response.status(204).send();
   }
 
-  getAll(request, response) {
+  getAll(request: Request, response: Response): void {
     response.send({
       page: 1,
       pageSize: 20,
@@ -55,7 +65,7 @@ export default class AppointmentController {
     });
   }
 
-  store(request, response) {
+  store(request: Request, response: Response): void {
     const appointment = request.body;
 
     const { success, data, error } = appointmentSchema.safeParse({
@@ -66,7 +76,8 @@ export default class AppointmentController {
     });
 
     if (!success) {
-      return response.status(400).send(error);
+      response.status(400).send(error);
+      return;
     }
 
     const [id] = crypto.randomUUID().split('-');
@@ -77,7 +88,8 @@ export default class AppointmentController {
     scheduledDate.setSeconds(0, 0);
 
     if (scheduledDate.getMinutes() !== 0) {
-      return response.status(400).send({ message: 'O horário do agendamento precisa ser exato (ex: 13:00, 14:00).' });
+      response.status(400).send({ message: 'O horário do agendamento precisa ser exato (ex: 13:00, 14:00).' });
+      return;
     }
 
     const appointmentsOnDay = appointments.filter(
@@ -89,7 +101,8 @@ export default class AppointmentController {
     );
 
     if (appointmentsOnDay.length >= APPOINTMENTS_DAILY_LIMIT) {
-      return response.status(400).send({ message: 'Esse dia está esgotado.' });
+      response.status(400).send({ message: 'Esse dia está esgotado.' });
+      return;
     }
 
     const appointmentsAtHour = appointments.filter(
@@ -101,7 +114,8 @@ export default class AppointmentController {
     );
 
     if (appointmentsAtHour.length >= APPOINTMENTS_HOURLY_LIMIT) {
-      return response.status(400).send({ message: 'Esse horário está esgotado.' });
+      response.status(400).send({ message: 'Esse horário está esgotado.' });
+      return;
     }
 
     appointments.push(data);
