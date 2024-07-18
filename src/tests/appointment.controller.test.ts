@@ -18,6 +18,7 @@ describe('AppointmentController', () => {
 
     mockResponse = {
       send: jest.fn(),
+      status: jest.fn().mockReturnThis(),
     };
 
     (appointmentController as any).appointments = [...mockAppointments];
@@ -50,6 +51,35 @@ describe('AppointmentController', () => {
 
     const updatedAppointment = (appointmentController as any).appointments.find((appointment: Appointment) => appointment.id === '1');
     expect(updatedAppointment).toEqual({
+      id: '1',
+      name: 'Matheus Soares da Silva Dantas Pereira',
+      situation: 'pending',
+      birthDate: new Date('1990-01-01'),
+      scheduledDate: new Date('2024-07-21T13:00:00Z'),
+      conclusion: '',
+    });
+  });
+
+  it('should destroy the appointment with the given id', () => {
+    mockRequest.params = { id: '1' };
+    appointmentController.destroy(mockRequest as Request, mockResponse as Response);
+
+    expect(mockResponse.status).toHaveBeenCalledWith(204);
+    expect(mockResponse.send).toHaveBeenCalled();
+
+    const deletedAppointment = (appointmentController as any).appointments.find((appointment: Appointment) => appointment.id === '1');
+    expect(deletedAppointment).toBeUndefined();
+  });
+
+  it('should not destroy any appointment if id does not match', () => {
+    mockRequest.params = { id: '3' };
+    appointmentController.destroy(mockRequest as Request, mockResponse as Response);
+
+    expect(mockResponse.status).toHaveBeenCalledWith(204);
+    expect(mockResponse.send).toHaveBeenCalled();
+
+    const existingAppointment = (appointmentController as any).appointments.find((appointment: Appointment) => appointment.id === '1');
+    expect(existingAppointment).toEqual({
       id: '1',
       name: 'Matheus Soares da Silva Dantas Pereira',
       situation: 'pending',
