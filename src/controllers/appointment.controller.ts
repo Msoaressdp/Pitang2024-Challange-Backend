@@ -6,15 +6,14 @@ import { Appointment } from '../interfaces/index';
 const APPOINTMENTS_HOURLY_LIMIT = 2;
 const APPOINTMENTS_DAILY_LIMIT = 20;
 
-let appointments: Appointment[] = [];
-
 export default class AppointmentController {
+  private appointments: Appointment[] = [];
 
   update(request: Request, response: Response): void {
     const { id } = request.params;
     const { situation, conclusion } = request.body;
 
-    const newAppointments = appointments.map((appointment) => {
+    const newAppointments = this.appointments.map((appointment) => {
       if (appointment.id === id) {
         return {
           ...appointment,
@@ -26,7 +25,7 @@ export default class AppointmentController {
       return appointment;
     });
 
-    appointments = newAppointments;
+    this.appointments = newAppointments;
 
     response.send({ message: 'Appointment Updated' });
   }
@@ -34,7 +33,7 @@ export default class AppointmentController {
   destroy(request: Request, response: Response): void {
     const { id } = request.params;
 
-    appointments = appointments.filter((appointment) => appointment.id !== id);
+    this.appointments = this.appointments.filter((appointment) => appointment.id !== id);
 
     response.status(204).send();
   }
@@ -43,8 +42,8 @@ export default class AppointmentController {
     response.send({
       page: 1,
       pageSize: 20,
-      totalCount: appointments.length,
-      items: appointments,
+      totalCount: this.appointments.length,
+      items: this.appointments,
     });
   }
 
@@ -75,7 +74,7 @@ export default class AppointmentController {
       return;
     }
 
-    const appointmentsOnDay = appointments.filter(
+    const appointmentsOnDay = this.appointments.filter(
       (appointment) => {
         const appointmentDate = new Date(appointment.scheduledDate);
         appointmentDate.setSeconds(0, 0);
@@ -88,7 +87,7 @@ export default class AppointmentController {
       return;
     }
 
-    const appointmentsAtHour = appointments.filter(
+    const appointmentsAtHour = this.appointments.filter(
       (appointment) => {
         const appointmentDate = new Date(appointment.scheduledDate);
         appointmentDate.setSeconds(0, 0);
@@ -101,7 +100,7 @@ export default class AppointmentController {
       return;
     }
 
-    appointments.push(data);
+    this.appointments.push(data);
 
     response.send({ message: 'store', data });
   }
