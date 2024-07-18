@@ -88,4 +88,27 @@ describe('AppointmentController', () => {
       conclusion: '',
     });
   });
+
+  it('should return all appointments', () => {
+    appointmentController.getAll(mockRequest as Request, mockResponse as Response);
+
+    expect(mockResponse.send).toHaveBeenCalledWith({
+      page: 1,
+      pageSize: 20,
+      totalCount: mockAppointments.length,
+      items: mockAppointments,
+    });
+  });
+
+  it('should return an empty list if there are no appointments', () => {
+    (appointmentController as any).appointments = [];
+    appointmentController.getAll(mockRequest as Request, mockResponse as Response);
+
+    expect(mockResponse.send).toHaveBeenCalledWith({
+      page: 1,
+      pageSize: 20,
+      totalCount: 0,
+      items: [],
+    });
+  });
 });
