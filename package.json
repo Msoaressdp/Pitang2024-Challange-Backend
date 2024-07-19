@@ -1,12 +1,13 @@
 {
   "name": "pitang-backend",
   "version": "1.0.0",
-  "description": "Pitang Challange: COVID-19 vaccine scheduling",
-  "main": "index.js",
+  "description": "Pitang Challenge: COVID-19 vaccine scheduling",
+  "main": "src/index.ts",
+  "type": "module",
   "scripts": {
-    "test": "npm test",
-    "start": "node --env-file=.env src/index.mjs",
-    "dev": "nodemon --env-file=.env src/index.mjs"
+    "test": "jest",
+    "start": "tsx src/index.ts",
+    "dev": "tsx watch --env-file=.env src/index.ts"
   },
   "repository": {
     "type": "git",
@@ -19,9 +20,24 @@
   },
   "homepage": "https://github.com/Msoaressdp/Pitang2024-Challange-Backend#readme",
   "dependencies": {
-    "express": "^4.19.2"
+    "cors": "^2.8.5",
+    "express": "^4.19.2",
+    "helmet": "^7.1.0",
+    "ts-node": "^10.9.2",
+    "zod": "^3.23.8"
   },
   "devDependencies": {
-    "nodemon": "^3.1.4"
+    "@babel/core": "^7.24.9",
+    "@babel/preset-env": "^7.24.8",
+    "@babel/preset-typescript": "^7.24.7",
+    "@types/cors": "^2.8.17",
+    "@types/express": "^4.17.21",
+    "@types/jest": "^29.5.12",
+    "babel-jest": "^29.7.0",
+    "jest": "^29.7.0",
+    "nodemon": "^3.1.4",
+    "ts-jest": "^29.2.2",
+    "tsx": "^4.16.2",
+    "typescript": "^5.5.3"
   }
 }
